@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="./content/js/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="./content/site.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/timer.jquery/0.7.0/timer.jquery.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+
+    <div class="titulo">
+        <h2>Pedra Papel e Tesora</h2>
+    </div>
+    <div id="principal">
+        
+        <div id="meujogo">
+            <img class="imagem" id="minha" src="./content/images/papel.png">
+            <button id="btnEscolher" disabled class="botoes" type="button" onclick="mudar()">Escolher</button>
+        </div>
+        <div class="meio">
+            <button class="botoes" type="button" onclick="escolhaComputador()">Iniciar</button>
+            <div class="countdown"></div>
+
+        </div>
+
+        <div id="jogador">
+            <img id="computador" class="imagem" src="./content/images/papel.png">
+        </div>
+    </div>
+
+
+</body>
+<script>
+
+
+    function verificaResultado() {
+        var minhaEscolha = $("#minha").prop("src");
+        var escolhaComputador = $("#computador").prop("src");
+        if (minhaEscolha.includes('papel') && escolhaComputador.includes('tesoura')) {
+            alert('Você perdeu');
+        }
+        else if (minhaEscolha.includes('papel') && escolhaComputador.includes('pedra')) {
+            alert('Você ganhou');
+        }
+        else if (minhaEscolha.includes('pedra') && escolhaComputador.includes('tesoura')) {
+            alert('Você ganhou');
+        }
+        else if (minhaEscolha.includes('pedra') && escolhaComputador.includes('papel')) {
+            alert('Você perdeu');
+        }
+        else if (minhaEscolha.includes('tesoura') && escolhaComputador.includes('papel')) {
+            alert('Você ganhou');
+        }
+        else if (minhaEscolha.includes('tesoura') && escolhaComputador.includes('pedra')) {
+            alert('Você perdeu');
+        }
+        else {
+            alert('empate');
+        }
+        $("#btnEscolher").attr("disabled", true);
+
+    }
+
+    function mudar(computador = false) {
+        console.log(computador);
+
+        var escolha;
+        var imagem;
+        if (computador) {
+            escolha = $("#computador").prop("src");
+            imagem = $("#computador");
+        }
+        else {
+            escolha = $("#minha").prop("src");
+            imagem = $("#minha");
+        }
+
+        if (escolha.includes("papel")) {
+            $(imagem).prop("src", "./content/images/pedra.png");
+        }
+        else if (escolha.includes("pedra")) {
+            $(imagem).prop("src", "./content/images/tesoura.png");
+        }
+        else if (escolha.includes("tesoura")) {
+            $(imagem).prop("src", "./content/images/papel.png");
+        }
+
+    }
+
+
+    var idSetInteval;
+    function escolhaComputador() {
+        iniciar();
+        var tempo = Math.random() * (500 - 1000) + 500;
+        idSetInteval = setInterval("mudar(true)", tempo);
+    }
+
+    function iniciarTimer() {
+        var count = 6;
+        var counter = setInterval(timer, 1000);
+        function timer() {
+            console.log('a')
+            count = count - 1;
+            if (count == 0) {
+
+                clearInterval(idSetInteval);
+                verificaResultado();
+                return;
+            }
+        }
+    }
+
+    function iniciar() {
+
+        var timer2 = "00:05";
+        var interval = setInterval(function () {
+            var timer = timer2.split(':');
+            //by parsing integer, I avoid all extra string processing
+            var minutes = parseInt(timer[0], 10);
+            var seconds = parseInt(timer[1], 10);
+            --seconds;
+            minutes = (seconds < 0) ? --minutes : minutes;
+            if (minutes < 0) clearInterval(interval);
+            seconds = (seconds < 0) ? 0 : seconds;
+            seconds = (seconds < 10) ? '0' + seconds : seconds;
+            //minutes = (minutes < 10) ?  minutes : minutes;
+            $('.countdown').html(seconds);
+            timer2 = minutes + ':' + seconds;
+        }, 1000);
+        iniciarTimer();
+        $("#btnEscolher").attr("disabled", false);
+
+    }
+
+</script>
+
+</html>
